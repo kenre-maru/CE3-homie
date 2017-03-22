@@ -1,0 +1,80 @@
+using UnityEngine;
+using System.Collections;
+
+public class PhysicsMove : MonoBehaviour {
+
+	public Rigidbody yerpp;
+
+	public float gass;
+
+	public GameObject target;
+	public GameObject yes;
+
+	public AudioSource bet;
+
+	Vector3 targetPos;
+
+	public bool cheer;
+
+	// Use this for initialization
+	void Start () {
+	
+		yerpp = GetComponent<Rigidbody>();
+		cheer = false;
+
+	}
+		
+	// Update is called once per frame
+	void Update () {
+
+		//Up/Down/Left/Right Funct.
+	 
+	    if (Input.GetKey (KeyCode.W)) {
+			yerpp.AddForce (transform.forward * gass);
+		}
+
+		if (Input.GetKey (KeyCode.A)) {
+			yerpp.AddForce (transform.right * gass);
+		}
+
+		if (Input.GetKey (KeyCode.S)) {
+			yerpp.AddForce (transform.forward * -gass);
+		}
+
+		if (Input.GetKey (KeyCode.D)) {
+			yerpp.AddForce (transform.right * -gass);
+		}
+
+		//Jump Funct.
+
+		if (Input.GetKeyDown ("up")) {
+			yerpp.AddForce (transform.up * gass);
+		}
+
+		//Crowd Funct.
+		if (cheer == true){
+			yes.transform.position += new Vector3 (Mathf.Sin (Time.time), Mathf.Sin (Time.time), Mathf.Sin (Time.time));
+		}	 
+
+	}
+
+	void FixedUpdate (){
+
+		targetPos = target.transform.position;
+
+		Vector3 direction = Vector3.Normalize (targetPos - transform.position);
+		yerpp.AddForce (direction * gass);
+
+	}
+
+	//Collision Funct.
+	void OnCollisionEnter(Collision coll){
+	
+		if (coll.gameObject.tag == "enemy") {
+			cheer = true;
+			bet.Play();
+		}
+			
+	}
+  }
+
